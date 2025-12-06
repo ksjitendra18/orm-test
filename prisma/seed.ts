@@ -1,27 +1,31 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { config } from "dotenv";
-import { neonConfig } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../src/generated/prisma/client.js";
-import ws from "ws";
 
 config({ path: ".env" });
 
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  console.error("Available env vars:", Object.keys(process.env).filter(k => k.includes("DATABASE")));
-  throw new Error("DATABASE_URL environment variable is not set. Please check your .env file.");
+  console.error(
+    "Available env vars:",
+    Object.keys(process.env).filter((k) => k.includes("DATABASE"))
+  );
+  throw new Error(
+    "DATABASE_URL environment variable is not set. Please check your .env file."
+  );
 }
 
-neonConfig.webSocketConstructor = ws;
-
 console.log("🔗 Connecting to database...");
-const adapter = new PrismaNeon({ connectionString });
+
+const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 function generateId(): string {
-  return Math.random().toString(36).substring(2, 15) +
-         Math.random().toString(36).substring(2, 15);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
 }
 
 function slugify(text: string): string {
@@ -33,26 +37,160 @@ function slugify(text: string): string {
 
 // Realistic data arrays
 const firstNames = [
-  "James", "Emma", "Liam", "Olivia", "Noah", "Ava", "William", "Sophia", "Oliver", "Isabella",
-  "Benjamin", "Mia", "Elijah", "Charlotte", "Lucas", "Amelia", "Mason", "Harper", "Ethan", "Evelyn",
-  "Alexander", "Abigail", "Henry", "Emily", "Sebastian", "Elizabeth", "Jack", "Sofia", "Aiden", "Avery",
-  "Owen", "Ella", "Samuel", "Scarlett", "Ryan", "Grace", "Nathan", "Chloe", "Caleb", "Victoria",
-  "Dylan", "Riley", "Luke", "Aria", "Andrew", "Lily", "Isaac", "Aubrey", "Gabriel", "Zoey",
-  "Anthony", "Penelope", "Joshua", "Lillian", "Christopher", "Addison", "Jaxon", "Layla", "Maverick", "Natalie",
-  "David", "Camila", "Joseph", "Hannah", "Carter", "Brooklyn", "Michael", "Zoe", "Jayden", "Nora",
-  "John", "Luna", "Daniel", "Savannah", "Matthew", "Leah", "Leo", "Audrey", "Jackson", "Claire",
-  "Asher", "Eleanor", "Grayson", "Skylar", "Ezra", "Ellie", "Lincoln", "Stella", "Muhammad", "Hazel"
+  "James",
+  "Emma",
+  "Liam",
+  "Olivia",
+  "Noah",
+  "Ava",
+  "William",
+  "Sophia",
+  "Oliver",
+  "Isabella",
+  "Benjamin",
+  "Mia",
+  "Elijah",
+  "Charlotte",
+  "Lucas",
+  "Amelia",
+  "Mason",
+  "Harper",
+  "Ethan",
+  "Evelyn",
+  "Alexander",
+  "Abigail",
+  "Henry",
+  "Emily",
+  "Sebastian",
+  "Elizabeth",
+  "Jack",
+  "Sofia",
+  "Aiden",
+  "Avery",
+  "Owen",
+  "Ella",
+  "Samuel",
+  "Scarlett",
+  "Ryan",
+  "Grace",
+  "Nathan",
+  "Chloe",
+  "Caleb",
+  "Victoria",
+  "Dylan",
+  "Riley",
+  "Luke",
+  "Aria",
+  "Andrew",
+  "Lily",
+  "Isaac",
+  "Aubrey",
+  "Gabriel",
+  "Zoey",
+  "Anthony",
+  "Penelope",
+  "Joshua",
+  "Lillian",
+  "Christopher",
+  "Addison",
+  "Jaxon",
+  "Layla",
+  "Maverick",
+  "Natalie",
+  "David",
+  "Camila",
+  "Joseph",
+  "Hannah",
+  "Carter",
+  "Brooklyn",
+  "Michael",
+  "Zoe",
+  "Jayden",
+  "Nora",
+  "John",
+  "Luna",
+  "Daniel",
+  "Savannah",
+  "Matthew",
+  "Leah",
+  "Leo",
+  "Audrey",
+  "Jackson",
+  "Claire",
+  "Asher",
+  "Eleanor",
+  "Grayson",
+  "Skylar",
+  "Ezra",
+  "Ellie",
+  "Lincoln",
+  "Stella",
+  "Muhammad",
+  "Hazel",
 ];
 
 const lastNames = [
-  "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
-  "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin",
-  "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson",
-  "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores",
-  "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts"
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Rodriguez",
+  "Martinez",
+  "Hernandez",
+  "Lopez",
+  "Gonzalez",
+  "Wilson",
+  "Anderson",
+  "Thomas",
+  "Taylor",
+  "Moore",
+  "Jackson",
+  "Martin",
+  "Lee",
+  "Perez",
+  "Thompson",
+  "White",
+  "Harris",
+  "Sanchez",
+  "Clark",
+  "Ramirez",
+  "Lewis",
+  "Robinson",
+  "Walker",
+  "Young",
+  "Allen",
+  "King",
+  "Wright",
+  "Scott",
+  "Torres",
+  "Nguyen",
+  "Hill",
+  "Flores",
+  "Green",
+  "Adams",
+  "Nelson",
+  "Baker",
+  "Hall",
+  "Rivera",
+  "Campbell",
+  "Mitchell",
+  "Carter",
+  "Roberts",
 ];
 
-const domains = ["gmail.com", "yahoo.com", "outlook.com", "icloud.com", "proton.me", "hey.com", "fastmail.com"];
+const domains = [
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "icloud.com",
+  "proton.me",
+  "hey.com",
+  "fastmail.com",
+];
 
 const postTitles = [
   "Building Scalable APIs with Next.js and PostgreSQL",
@@ -94,7 +232,7 @@ const postTitles = [
   "Building CLI Tools with Node.js",
   "Implementing Feature Flags in Production",
   "Database Migration Strategies for Zero Downtime",
-  "The Art of Writing Clean Code"
+  "The Art of Writing Clean Code",
 ];
 
 const postContents = [
@@ -135,13 +273,19 @@ function getRandomElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function generateRealisticEmail(firstName: string, lastName: string, index: number): string {
+function generateRealisticEmail(
+  firstName: string,
+  lastName: string,
+  index: number
+): string {
   const formats = [
     `${firstName.toLowerCase()}.${lastName.toLowerCase()}`,
     `${firstName.toLowerCase()}${lastName.toLowerCase()}`,
     `${firstName.toLowerCase()}_${lastName.toLowerCase()}`,
     `${firstName.toLowerCase()}${index}`,
-    `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 99)}`,
+    `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(
+      Math.random() * 99
+    )}`,
   ];
   return `${getRandomElement(formats)}@${getRandomElement(domains)}`;
 }
@@ -190,10 +334,26 @@ async function main() {
   // Create 20 categories (2x original 10)
   console.log("📁 Creating categories...");
   const categoryNames = [
-    "Technology", "Science", "Health", "Business", "Entertainment",
-    "Sports", "Politics", "Travel", "Food", "Fashion",
-    "Finance", "Education", "Gaming", "Lifestyle", "Automotive",
-    "Real Estate", "Marketing", "Design", "Photography", "Music"
+    "Technology",
+    "Science",
+    "Health",
+    "Business",
+    "Entertainment",
+    "Sports",
+    "Politics",
+    "Travel",
+    "Food",
+    "Fashion",
+    "Finance",
+    "Education",
+    "Gaming",
+    "Lifestyle",
+    "Automotive",
+    "Real Estate",
+    "Marketing",
+    "Design",
+    "Photography",
+    "Music",
   ];
   const categories = await Promise.all(
     categoryNames.map((name) =>
@@ -207,14 +367,46 @@ async function main() {
   // Create 40 tags (2x original 20)
   console.log("🏷️ Creating tags...");
   const tagNames = [
-    "JavaScript", "TypeScript", "React", "Next.js", "Node.js",
-    "PostgreSQL", "Prisma", "Drizzle", "AI", "Machine Learning",
-    "Web Development", "Mobile", "Cloud", "DevOps", "Security",
-    "Performance", "Tutorial", "News", "Opinion", "Guide",
-    "Vue.js", "Angular", "Svelte", "Python", "Rust",
-    "GraphQL", "REST API", "Docker", "Kubernetes", "AWS",
-    "Firebase", "Supabase", "MongoDB", "Redis", "Testing",
-    "CSS", "Tailwind", "UI/UX", "Accessibility", "SEO"
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "Prisma",
+    "Drizzle",
+    "AI",
+    "Machine Learning",
+    "Web Development",
+    "Mobile",
+    "Cloud",
+    "DevOps",
+    "Security",
+    "Performance",
+    "Tutorial",
+    "News",
+    "Opinion",
+    "Guide",
+    "Vue.js",
+    "Angular",
+    "Svelte",
+    "Python",
+    "Rust",
+    "GraphQL",
+    "REST API",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Firebase",
+    "Supabase",
+    "MongoDB",
+    "Redis",
+    "Testing",
+    "CSS",
+    "Tailwind",
+    "UI/UX",
+    "Accessibility",
+    "SEO",
   ];
   const tags = await Promise.all(
     tagNames.map((name) =>
@@ -259,7 +451,9 @@ async function main() {
     }
   }
   await prisma.postCategory.createMany({ data: postCategories });
-  console.log(`✅ Created ${postCategories.length} post-category relationships`);
+  console.log(
+    `✅ Created ${postCategories.length} post-category relationships`
+  );
 
   // Create post-tag relationships
   console.log("🔗 Creating post-tag relationships...");
@@ -304,4 +498,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
